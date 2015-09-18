@@ -6,7 +6,7 @@ import android. util .Log ;
 public class LogUtil{
 
       private static final boolean ENABLE_DEBUG = true;
-      private static final String TAG = "SystemMessage";
+      private static final String TAG = "tag";
 
       public static final int FILENAMEINDEX = 0;
       public static final int METHODNAMEINDEX = 1;
