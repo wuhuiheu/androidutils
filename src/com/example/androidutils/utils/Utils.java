@@ -91,8 +91,10 @@ public class Utils{
 
 	/**
 	 * 通过intent方式删除应用
+	 *
 	 * @param context
-	 * @param packagename 包名
+	 * @param packagename
+	 *            包名
 	 * @author ljh
 	 */
 	public static void uninstallApp(Context context, String packagename){
