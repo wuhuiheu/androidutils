@@ -65,8 +65,9 @@ public class Utils{
 	}
 
 	/**
-	 * 安装App
+	 * 通过intent方式安装App
 	 *
+	 * @param context
 	 * @param filePath
 	 *            apk文件的路径
 	 * @author ljh
@@ -85,6 +86,22 @@ public class Utils{
 
 		Intent intent = new Intent(Intent.ACTION_VIEW);
 		intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive");
+		context.startActivity(intent);
+	}
+
+	/**
+	 * 通过intent方式删除应用
+	 * @param context
+	 * @param packagename 包名
+	 * @author ljh
+	 */
+	public static void uninstallApp(Context context, String packagename){
+		if(TextUtils.isEmpty(packagename)){
+			LogUtil.w(TAG, "包名为空");
+			return;
+		}
+
+		Intent intent = new Intent(Intent.ACTION_DELETE, Uri.parse("package:" + packagename));
 		context.startActivity(intent);
 	}
 }
