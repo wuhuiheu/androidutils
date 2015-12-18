@@ -3,31 +3,26 @@ package com.example.androidutils.utils;
 
 import android.util.Log;
 
-public class LogUtil{
+public final class LogUtil{
 
-	private static final boolean ENABLE_DEBUG = true;
-	private static final String TAG = "tag";
+	// log level
+	public static final int LEVEL = Log.DEBUG;
 
-	public static final int FILENAMEINDEX = 0;
-	public static final int METHODNAMEINDEX = 1;
-	public static final int LINENUMBERINDEX = 2;
+	// tag
+	private static final String TAG = "FCC";
 
-	private LogUtil(){}
-
-	public static boolean isDebuggable(){
-		return ENABLE_DEBUG;
+	private LogUtil(){
+		throw new RuntimeException("不能实例");
 	}
 
-	private static String createLog(String message, StackTraceElement[] stackTrace){
-		String[] contextInfos = getContextInfos(stackTrace);
+	private static boolean isLogable(int level){
+		return level >= LEVEL;
+	}
 
-		if(contextInfos == null || contextInfos.length < 3){
-			return "";
-		}
-
-		String filename = contextInfos[FILENAMEINDEX];
-		String methodname = contextInfos[METHODNAMEINDEX];
-		String lineNumber = contextInfos[LINENUMBERINDEX];
+	private static String createLogMsg(String message, StackTraceElement[] stackTrace){
+		String filename = stackTrace[1].getFileName().substring(0, stackTrace[1].getFileName().indexOf("."));
+		String methodname = stackTrace[1].getMethodName();
+		String lineNumber = String.valueOf(stackTrace[1].getLineNumber());
 
 		StringBuffer sb = new StringBuffer();
 		sb.append("[ ");
@@ -42,111 +37,76 @@ public class LogUtil{
 		return sb.toString();
 	}
 
-	private static String[] getContextInfos(StackTraceElement[] stackTrace){
-
-		String[] contextInfos = new String[3];
-
-		String fileName = stackTrace[1].getFileName();
-		contextInfos[FILENAMEINDEX] = fileName.substring(0, fileName.indexOf("."));
-		contextInfos[METHODNAMEINDEX] = stackTrace[1].getMethodName();
-		contextInfos[LINENUMBERINDEX] = Integer.valueOf(stackTrace[1].getLineNumber()).toString();
-		return contextInfos;
-	}
-
-	public static void e(String message){
-		if(!isDebuggable()){
-			return;
+	public static void v(String message){
+		if(isLogable(Log.VERBOSE)){
+			Log.v(TAG, createLogMsg(message, new Throwable().getStackTrace()));
 		}
-		StackTraceElement[] stackTrace = new Throwable().getStackTrace();
-		Log.e(TAG, createLog(message, stackTrace));
-	}
-
-	public static void i(String message){
-		if(!isDebuggable())
-			return;
-
-		StackTraceElement[] stackTrace = new Throwable().getStackTrace();
-		Log.i(TAG, createLog(message, stackTrace));
 	}
 
 	public static void d(String message){
-		if(!isDebuggable())
-			return;
-
-		StackTraceElement[] stackTrace = new Throwable().getStackTrace();
-		Log.d(TAG, createLog(message, stackTrace));
+		if(isLogable(Log.DEBUG)){
+			Log.d(TAG, createLogMsg(message, new Throwable().getStackTrace()));
+		}
 	}
 
-	public static void v(String message){
-		if(!isDebuggable())
-			return;
-
-		StackTraceElement[] stackTrace = new Throwable().getStackTrace();
-		Log.v(TAG, createLog(message, stackTrace));
+	public static void i(String message){
+		if(isLogable(Log.INFO)){
+			Log.i(TAG, createLogMsg(message, new Throwable().getStackTrace()));
+		}
 	}
 
 	public static void w(String message){
-		if(!isDebuggable())
-			return;
+		if(isLogable(Log.WARN)){
+			Log.w(TAG, createLogMsg(message, new Throwable().getStackTrace()));
+		}
+	}
 
-		StackTraceElement[] stackTrace = new Throwable().getStackTrace();
-		Log.w(TAG, createLog(message, stackTrace));
+	public static void e(String message){
+		if(isLogable(Log.ERROR)){
+			Log.e(TAG, createLogMsg(message, new Throwable().getStackTrace()));
+		}
 	}
 
 	public static void wtf(String message){
-		if(!isDebuggable())
-			return;
-
-		StackTraceElement[] stackTrace = new Throwable().getStackTrace();
-		Log.wtf(TAG, createLog(message, stackTrace));
-	}
-
-	public static void e(String tag, String message){
-		if(!isDebuggable())
-			return;
-
-		StackTraceElement[] stackTrace = new Throwable().getStackTrace();
-		Log.e(tag, createLog(message, stackTrace));
-	}
-
-	public static void i(String tag, String message){
-		if(!isDebuggable())
-			return;
-
-		StackTraceElement[] stackTrace = new Throwable().getStackTrace();
-		Log.i(tag, createLog(message, stackTrace));
-	}
-
-	public static void d(String tag, String message){
-		if(!isDebuggable())
-			return;
-
-		StackTraceElement[] stackTrace = new Throwable().getStackTrace();
-		Log.d(tag, createLog(message, stackTrace));
+		if(isLogable(Log.ASSERT)){
+			Log.wtf(TAG, createLogMsg(message, new Throwable().getStackTrace()));
+		}
 	}
 
 	public static void v(String tag, String message){
-		if(!isDebuggable())
-			return;
+		if(isLogable(Log.VERBOSE)){
+			Log.v(tag, createLogMsg(message, new Throwable().getStackTrace()));
+		}
+	}
 
-		StackTraceElement[] stackTrace = new Throwable().getStackTrace();
-		Log.v(tag, createLog(message, stackTrace));
+	public static void d(String tag, String message){
+		if(isLogable(Log.DEBUG)){
+			Log.d(tag, createLogMsg(message, new Throwable().getStackTrace()));
+		}
+	}
+
+	public static void i(String tag, String message){
+		if(isLogable(Log.INFO)){
+			Log.i(tag, createLogMsg(message, new Throwable().getStackTrace()));
+		}
 	}
 
 	public static void w(String tag, String message){
-		if(!isDebuggable())
-			return;
+		if(isLogable(Log.WARN)){
+			Log.w(tag, createLogMsg(message, new Throwable().getStackTrace()));
+		}
+	}
 
-		StackTraceElement[] stackTrace = new Throwable().getStackTrace();
-		Log.w(tag, createLog(message, stackTrace));
+	public static void e(String tag, String message){
+		if(isLogable(Log.ERROR)){
+			Log.e(tag, createLogMsg(message, new Throwable().getStackTrace()));
+		}
 	}
 
 	public static void wtf(String tag, String message){
-		if(!isDebuggable())
-			return;
-
-		StackTraceElement[] stackTrace = new Throwable().getStackTrace();
-		Log.wtf(tag, createLog(message, stackTrace));
+		if(isLogable(Log.ASSERT)){
+			Log.wtf(tag, createLogMsg(message, new Throwable().getStackTrace()));
+		}
 	}
 
 }
